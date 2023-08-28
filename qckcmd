@@ -1,0 +1,80 @@
+#!/bin/bash
+
+enable -n echo
+
+RCFILE="options.conf"
+declare -A POINTS
+
+readonly NORMAL="\33[0m"
+readonly BOLD="\33[1m"
+readonly YELLOW="\33[33m"
+readonly RED="\33[31m"
+readonly BLUE="\33[34m"
+
+readonly SCRIPT_NAME=$0
+
+# Magic to alias stdout to stderr,
+#  to keep everything from clobbing stdout,
+#  but save the file descriptor so it can
+#  be restored on a successful select
+exec 3>&1
+exec 1>&2
+
+function usage(){
+	echo -e "${BOLD}${SCRIPT_NAME} [options]${NORMAL}"
+	echo -e "	-h        : print this help message"
+	echo -e "	-i [file] : specify init file"
+	echo -e "${YELLOW}Qckcmd allows you to map keys to commands.${NORMAL}"
+	echo -e "${YELLOW}Effectively it's a hack to compensate for the in unreliableness of what key combinations are trapped by terminal emulators/multiplexers by adding a prefix key.${NORMAL}"
+	echo -e "${YELLOW}Qckcmd does not directly execute commands, if one is successfully selected it will be echod to stdout.${NORMAL}"
+	echo -e "${YELLOW}Nothing else will ever be printed on stdout.${NORMAL}"
+	echo -e "${YELLOW}The intended way to run is to execute it's output like so:${NORMAL}"
+	echo -e "${BLUE}    \$(qckcmd -i myinit.conf)${NORMAL}"
+	echo -e "${YELLOW}As a result commands modifying the shells internal state are valid to map to (e.g.: cd, source, <alias>).${NORMAL}"
+	echo -e "${YELLOW}The configuration follows this format:${NORMAL}"
+	echo -e "${BLUE}    <KEY>: <COMMAND>${NORMAL}"
+}
+
+function list_options() {
+	for KEY in "${!POINTS[@]}"; do
+		echo -e "${YELLOW}${BOLD}${KEY}${NORMAL}${BOLD})${NORMAL} ${POINTS[$KEY]}"
+	done
+}
+
+function read_config() {
+	while IFS= read -r line; do
+		KEY=$(echo "$line" | cut -d ':' -f 1)
+		CMD=$(echo "$line" | cut -d ':' -f 2-)
+		POINTS["$KEY"]="${CMD#"${CMD%%[![:space:]]*}"}"
+	done < "$1"
+
+}
+
+OPTSTR="hi:"
+while getopts "${OPTSTR}" O; do
+        case $O in
+				h) usage && exit ;;
+				i) read_config ${OPTARG} ;;
+                *) echo -e "${RED}Unrecognized option, exiting...${NORMAL}" && exit 1 ;;
+        esac
+done
+
+while true; do
+	list_options
+
+	printf "${RED}> ${NORMAL}"
+    read -n 1 INPUT
+	echo ""
+
+	INPUT="${INPUT#"${INPUT%%[![:space:]]*}"}"
+	if [[ -z "$INPUT" ]]; then
+		continue
+    fi
+
+    if [[ -n "${POINTS[$INPUT]}" ]]; then
+		echo -e "${BOLD}$ ${POINTS[$INPUT]}${NORMAL}"
+		exec 1>&3
+        echo "${POINTS[$INPUT]}"
+		exit 0
+    fi
+done
