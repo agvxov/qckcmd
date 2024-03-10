@@ -70,6 +70,9 @@ while true; do
 	if [[ -z "$INPUT" ]]; then
 		continue
 	fi
+	if [[ "$INPUT" == $'\E' ]]; then
+		exit 0
+	fi
 
 	if [[ -n "${POINTS[$INPUT]}" ]]; then
 		echo -e "${BOLD}$ ${POINTS[$INPUT]}${NORMAL}"
