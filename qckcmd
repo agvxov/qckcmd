@@ -5,14 +5,21 @@ enable -n echo
 RCFILE="options.conf"
 declare -A POINTS
 
-# XXX reintroduce colors to the help message by creating a C/hl program
-readonly NORMAL="\33[0m"
-readonly BOLD="\33[1m"
-readonly YELLOW="\33[33m"
-readonly RED="\33[31m"
-readonly BLUE="\33[34m"
-
-readonly SCRIPT_NAME=$0
+if [[ -n "${NO_COLOR:-}" ]]; then
+    readonly RED=""
+    readonly GREEN=""
+    readonly YELLOW=""
+    readonly BLUE=""
+    readonly MAGENTA=""
+    readonly RST=""
+else
+    readonly RED=$'\e[31m'
+    readonly GREEN=$'\e[32m'
+    readonly YELLOW=$'\e[33m'
+    readonly BLUE=$'\e[34m'
+    readonly MAGENTA=$'\e[35m'
+    readonly RST=$'\e[0m'
+fi
 
 # Magic to alias stdout to stderr,
 #  to keep everything from clobbing stdout,
@@ -22,33 +29,34 @@ exec 3>&1
 exec 1>&2
 
 function usage(){
-    echo "    qckcmd [options]"
-    echo "        -h        : print this help message"
-    echo "        -i <file> : specify config file"
-    echo ""
-    echo "> QuiCK CoMmanDs"
-    echo "> Homepage: https://github.com/agvxov/qckcmd"
-    echo ""
-    echo "Utility to launch pre-defined commands quickly"
-    echo "by mapping them to characters."
-    echo ""
-    echo "It could conceptually be called a command bookmark system."
-    echo ""
-    echo "Qckcmd has the benefit over regular short-cuts that:"
-    echo "* You get a list of your short-cuts which helps remembering."
-    echo "* By introducing a leader key, your shell -especially Bash-"
-    echo "   won't steal your perfect mnemonic."
-    echo ""
-    echo "The config file should contain entries separated by newlines:"
-    echo "    <KEY>: <COMMAND>"
-    echo ""
-    echo "Qckcmd is not supposed to be ran by hand,"
-    echo "instead you are supposed to configure your shell such that Qckcmd is bound to a short-cut."
-    echo "(Small) wrappers for Bash and Fish are vendored to you in the project root."
-    echo "The wrappers assume the short-cut \`ctrl+p\` and the config file \`~/.qckcmd\`."
-    echo "Note that qckcmd does not actually execute commands, it echos the selected one"
-    echo "and the wrappers eval the result."
-    echo "This has the benefit that they can modify the shell (e.g. use \`source\`)."
+echo "${RED}> QuiCK CoMmanDs"
+echo "${RST}"
+echo "    ${BLUE}qckcmd${RST} ${MAGENTA}[options]${RST}"
+echo "        ${YELLOW}-${RST}h        ${YELLOW}:${RST} print this help message"
+echo "        ${YELLOW}-${RST}i ${MAGENTA}<file>${RST} ${YELLOW}:${RST} specify config file"
+echo ""
+echo "Utility to launch pre${YELLOW}-${RST}defined commands quickly"
+echo "by mapping them to characters${YELLOW}.${RST}"
+echo ""
+echo "It could conceptually be called a command bookmark system${YELLOW}.${RST}"
+echo ""
+echo "${BLUE}Qckcmd${RST} has the benefit over regular short${YELLOW}-${RST}cuts that${YELLOW}:${RST}"
+echo "${YELLOW}*${RST} You are echod a list of your short${YELLOW}-${RST}cuts which helps remembering${YELLOW}.${RST}"
+echo "${YELLOW}*${RST} By introducing a leader key${YELLOW},${RST} your terminal${YELLOW}/${RST}shell ${YELLOW}-${RST}especially Bash${YELLOW}-${RST}"
+echo "   won't steal your perfect mnemonic${YELLOW}.${RST}"
+echo ""
+echo "The config file should contain entries separated by newlines${YELLOW}:${RST}"
+echo "    ${MAGENTA}<KEY>${RST}${YELLOW}:${RST} ${MAGENTA}<COMMAND>${RST}"
+echo ""
+echo "${BLUE}Qckcmd${RST} is not supposed to be ran by hand${YELLOW},${RST}"
+echo "instead you are supposed to configure your shell such that ${BLUE}Qckcmd${RST} is bound to a short${YELLOW}-${RST}cut${YELLOW}.${RST}"
+echo "${YELLOW}(${RST}Small${YELLOW})${RST} wrappers for Bash and Fish are vendored to you in the project root${YELLOW}.${RST}"
+echo "The wrappers assume the short${YELLOW}-${RST}cut ${GREEN}\`ctrl+p\`${RST} and the config file ${GREEN}\`~/.qckcmd\`${RST}${YELLOW}.${RST}"
+echo "Note that ${BLUE}qckcmd${RST} does not actually execute commands${YELLOW},${RST} it echos the selected one"
+echo "and the wrappers eval the result${YELLOW}.${RST}"
+echo "This has the benefit that they can modify the shell ${YELLOW}(${RST}e${YELLOW}.${RST}g${YELLOW}.${RST} use ${GREEN}\`source\`${RST}${YELLOW}).${RST}"
+echo ""
+echo "Homepage${YELLOW}:${RST} ${RED}https${RST}${YELLOW}://${RST}${RED}github${RST}${YELLOW}.${RST}${RED}com${RST}${YELLOW}/${RST}${RED}agvxov${RST}${YELLOW}/${RST}${BLUE}qckcmd${RST}"
 }
 
 function list_options() {
