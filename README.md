@@ -1,7 +1,6 @@
 # Qckcmd
 
 > QuiCK CoMmanDs
-> Homepage: https://github.com/agvxov/qckcmd
 
     qckcmd [options]
         -h        : print this help message
@@ -27,3 +26,5 @@ The wrappers assume the short-cut `ctrl+p` and the config file `~/.qckcmd`.
 Note that qckcmd does not actually execute commands, it echos the selected one
 and the wrappers eval the result.
 This has the benefit that they can modify the shell (e.g. use `source`).
+
+Homepage: https://github.com/agvxov/qckcmd
