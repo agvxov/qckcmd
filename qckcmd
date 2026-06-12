@@ -5,6 +5,7 @@ enable -n echo
 RCFILE="options.conf"
 declare -A POINTS
 
+# XXX reintroduce colors to the help message by creating a C/hl program
 readonly NORMAL="\33[0m"
 readonly BOLD="\33[1m"
 readonly YELLOW="\33[33m"
@@ -21,18 +22,33 @@ exec 3>&1
 exec 1>&2
 
 function usage(){
-	echo -e "${BOLD}${SCRIPT_NAME} [options]${NORMAL}"
-	echo -e "\t-h        : print this help message"
-	echo -e "\t-i [file] : specify init file"
-	echo -e "${YELLOW}Qckcmd allows you to map keys to commands.${NORMAL}"
-	echo -e "${YELLOW}Effectively it's a hack to compensate for the in unreliableness of what key combinations are trapped by terminal emulators/multiplexers by adding a prefix key.${NORMAL}"
-	echo -e "${YELLOW}Qckcmd does not directly execute commands, if one is successfully selected it will be echod to stdout.${NORMAL}"
-	echo -e "${YELLOW}Nothing else will ever be printed on stdout.${NORMAL}"
-	echo -e "${YELLOW}The intended way to run is to execute it's output like so:${NORMAL}"
-	echo -e "${BLUE}\t\$(qckcmd -i myinit.conf)${NORMAL}"
-	echo -e "${YELLOW}As a result commands modifying the shells internal state are valid to map to (e.g.: cd, source, <alias>).${NORMAL}"
-	echo -e "${YELLOW}The configuration follows this format:${NORMAL}"
-	echo -e "${BLUE}\t<KEY>: <COMMAND>${NORMAL}"
+    echo "    qckcmd [options]"
+    echo "        -h        : print this help message"
+    echo "        -i <file> : specify config file"
+    echo ""
+    echo "> QuiCK CoMmanDs"
+    echo "> Homepage: https://github.com/agvxov/qckcmd"
+    echo ""
+    echo "Utility to launch pre-defined commands quickly"
+    echo "by mapping them to characters."
+    echo ""
+    echo "It could conceptually be called a command bookmark system."
+    echo ""
+    echo "Qckcmd has the benefit over regular short-cuts that:"
+    echo "* You get a list of your short-cuts which helps remembering."
+    echo "* By introducing a leader key, your shell -especially Bash-"
+    echo "   won't steal your perfect mnemonic."
+    echo ""
+    echo "The config file should contain entries separated by newlines:"
+    echo "    <KEY>: <COMMAND>"
+    echo ""
+    echo "Qckcmd is not supposed to be ran by hand,"
+    echo "instead you are supposed to configure your shell such that Qckcmd is bound to a short-cut."
+    echo "(Small) wrappers for Bash and Fish are vendored to you in the project root."
+    echo "The wrappers assume the short-cut \`ctrl+p\` and the config file \`~/.qckcmd\`."
+    echo "Note that qckcmd does not actually execute commands, it echos the selected one"
+    echo "and the wrappers eval the result."
+    echo "This has the benefit that they can modify the shell (e.g. use \`source\`)."
 }
 
 function list_options() {
