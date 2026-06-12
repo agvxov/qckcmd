@@ -13,7 +13,7 @@ It could conceptually be called a command bookmark system.
 
 Qckcmd has the benefit over regular short-cuts that:
 * You are echod a list of your short-cuts which helps remembering.
-* By introducing a leader key, your shell -especially Bash-
+* By introducing a leader key, your terminal/shell -especially Bash-
    won't steal your perfect mnemonic.
 
 The config file should contain entries separated by newlines:
