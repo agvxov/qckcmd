@@ -63,7 +63,7 @@ echo "Homepage${YELLOW}:${RST} ${RED}https${RST}${YELLOW}://${RST}${RED}github${
 
 function list_options() {
 	for KEY in "${!POINTS[@]}"; do
-		echo -e "${YELLOW}${BOLD}${KEY}${NORMAL}${BOLD})${NORMAL} ${POINTS[$KEY]}"
+		echo -e "${YELLOW}${BOLD}${KEY}${RST}${BOLD})${RST} ${POINTS[$KEY]}"
 	done
 }
 
@@ -81,14 +81,14 @@ while getopts "${OPTSTR}" O; do
 	case $O in
 		h) usage && exit ;;
 		i) read_config ${OPTARG} ;;
-		*) echo -e "${RED}Unrecognized option, exiting...${NORMAL}" && exit 1 ;;
+		*) echo -e "${RED}Unrecognized option, exiting...${RST}" && exit 1 ;;
 	esac
 done
 
 while true; do
 	list_options
 
-	printf "${RED}> ${NORMAL}"
+	printf "${RED}> ${RST}"
 	read -n 1 INPUT
 	echo ""
 
@@ -101,7 +101,7 @@ while true; do
 	fi
 
 	if [[ -n "${POINTS[$INPUT]}" ]]; then
-		echo -e "${BOLD}$ ${POINTS[$INPUT]}${NORMAL}"
+		echo -e "${BOLD}$ ${POINTS[$INPUT]}${RST}"
 		exec 1>&3
 		echo "${POINTS[$INPUT]}"
 		exit 0
