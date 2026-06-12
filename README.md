@@ -12,7 +12,7 @@ by mapping them to characters.
 It could conceptually be called a command bookmark system.
 
 Qckcmd has the benefit over regular short-cuts that:
-* You get a list of your short-cuts which helps remembering.
+* You are echod a list of your short-cuts which helps remembering.
 * By introducing a leader key, your shell -especially Bash-
    won't steal your perfect mnemonic.
 
